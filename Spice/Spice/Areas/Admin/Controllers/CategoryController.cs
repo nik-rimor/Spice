@@ -45,5 +45,82 @@ namespace Spice.Areas.Admin.Controllers
             return View(category);
         }
 
+        
+        // GET - Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var category =  await _db.Category.FindAsync(id.Value);
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+            _db.Update(category);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            
+        }
+
+        // GET - Delete
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await _db.Category.FindAsync(id.Value);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        // POST - Delete
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var category = await _db.Category.FindAsync(id);
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            _db.Category.Remove(category);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await _db.Category.FindAsync(id.Value);
+            return View(category);
+        }
+
     }
 }

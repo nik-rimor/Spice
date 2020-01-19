@@ -30,8 +30,9 @@
             {
                 <tr>
                     <td>@item.Name</td>
-                    <td>EDIT | DELETE | DETAILS</td>
-                    <td></td>
+                    <td>
+                        <partial name="_TableButtonPartial" model="item.Id"/>
+                    </td>
                 </tr>
             }
         </table>
