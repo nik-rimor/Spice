@@ -46,7 +46,7 @@
         {
             <p> Exisitng Subcategories: </p>
 
-            <div id"SubCategoryList">
+            <div id="SubCategoryList">
                 <ul class="list-group">
                 </ul>
 
@@ -63,13 +63,32 @@
         function updateSubCategoryList() {
             var categorySelected = document.getElementById("ddlCategoryList").value;
 
-            $(list) = $('#SubCategoryList');
+            $list = $('#SubCategoryList');
 
             $.ajax({
-                url: '/Admin/SubCategory/GetSubCategory' + categorySelected,
+                url: '/Admin/SubCategory/GetSubCategory/' + categorySelected,
                 type: 'GET',
                 dataType: 'text',
-            })
+                success: function (data) {
+                    results = JSON.parse(data);
+                    $list.html('');
+                    $list.append(' <ul class="liost-group"> ');
+                    for (i in results) {
+                        $list.append('<li class="list-group-item">' + results[i].text + '</li>');
+                    }
+                    $list.append('</ul>');
+                }
+            });
         }
+
+        $(document).ready(function () {
+            updateSubCategoryList();
+        });
+
+        $('#ddlCategoryList').on('change', function () {
+            updateSubCategoryList();
+        });
+
+
     </script>
 }

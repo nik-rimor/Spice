@@ -60,7 +60,9 @@ namespace Spice.Areas.Admin.Controllers
                 if (doesSubCategoryExists.Count() > 0)
                 {
                     // Error
-                    StatusMessage = "Error: Subcategory exists under " + doesSubCategoryExists.First().Category.Name + " category. Please use another name.";
+                    StatusMessage = "Error: Subcategory exists under "
+                        + doesSubCategoryExists.First().Category.Name
+                        + " category. Please use another name.";
                 }
                 else
                 {
