@@ -1,4 +1,4 @@
-﻿@model  Spice.ViewModels.SubCategoryAndCategoryViewModel
+﻿@model Spice.ViewModels.SubCategoryAndCategoryViewModel
 @using Spice.Extensions
 @{
     ViewData["Title"] = "Create";
@@ -7,20 +7,21 @@
 <br />
 <h2 class="text-info">Create Sub Category</h2>
 <br />
-<div class="border backgroundWhite">
-    <div class="col-8 border-light">
-        <form asp-action="Create">
 
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<div class="border backgroundWhite row">
+    <div class="col-8 border-right">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group row">
                 <div class="col-3">
                     <label asp-for="SubCategory.CategoryId" class="col-form-label"></label>
                 </div>
                 <div class="col-5">
-                    <select id="ddlCategoryList" 
-                            asp-for="SubCategory.Category" 
+                    <select id="ddlCategoryList"
+                            asp-for="SubCategory.CategoryId"
                             asp-items="Model.CategoryList.ToSelectListItem(Model.SubCategory.CategoryId)" class="form-control">
-
                     </select>
                 </div>
             </div>
@@ -41,13 +42,12 @@
         </form>
     </div>
     <div class="col-3 offset-1">
-        @if(Model.SubCategoryList.Count() > 0)
+        @if (Model.SubCategoryList.Count() > 0)
         {
             <p> Exisitng Subcategories: </p>
 
             <div id"SubCategoryList">
                 <ul class="list-group">
-
                 </ul>
 
             </div>
@@ -56,3 +56,20 @@
     </div>
 </div>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function updateSubCategoryList() {
+            var categorySelected = document.getElementById("ddlCategoryList").value;
+
+            $(list) = $('#SubCategoryList');
+
+            $.ajax({
+                url: '/Admin/SubCategory/GetSubCategory' + categorySelected,
+                type: 'GET',
+                dataType: 'text',
+            })
+        }
+    </script>
+}
