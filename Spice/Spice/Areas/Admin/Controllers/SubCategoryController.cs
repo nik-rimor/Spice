@@ -98,5 +98,71 @@ namespace Spice.Areas.Admin.Controllers
 
             return Json(new SelectList(subCategories, "Id", "Name"));
         }
+
+        // GET - Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if(id==null)
+            {
+                return NotFound();
+            }
+
+            var subCategory = await _db.SubCategory.SingleOrDefaultAsync(m => m.Id == id);
+            if(subCategory == null)
+            {
+                return NotFound();
+            }
+
+            SubCategoryAndCategoryViewModel createViewModel = new SubCategoryAndCategoryViewModel()
+            {
+                CategoryList = await _db.Category.ToListAsync(),
+                SubCategory = subCategory,
+                SubCategoryList = await _db.SubCategory.
+                                        OrderBy(p => p.Name).
+                                        Select(p => p.Name).
+                                        Distinct().ToListAsync()
+            };
+
+            return View(createViewModel);
+        }
+
+        // POST - Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, SubCategoryAndCategoryViewModel editViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var doesSubCategoryExists = _db.SubCategory.Include(s => s.Category)
+                    .Where(s => s.Name == editViewModel.SubCategory.Name && s.Category.Id == editViewModel.SubCategory.CategoryId);
+                if (doesSubCategoryExists.Count() > 0)
+                {
+                    // Error
+                    StatusMessage = "Error: Subcategory exists under "
+                        + doesSubCategoryExists.First().Category.Name
+                        + " category. Please use another name.";
+                }
+                else
+                {
+                    var subCatFromDb = await _db.SubCategory.SingleOrDefaultAsync(s => s.Id == id);
+                    subCatFromDb.Name = editViewModel.SubCategory.Name;
+
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            SubCategoryAndCategoryViewModel newViewModel = new SubCategoryAndCategoryViewModel()
+            {
+                CategoryList = await _db.Category.ToListAsync(),
+                SubCategory = editViewModel.SubCategory,
+                SubCategoryList = await _db.SubCategory.
+                                        OrderBy(p => p.Name).
+                                        Select(p => p.Name).
+                                        Distinct().ToListAsync(),
+                StatusMessage = StatusMessage
+            };
+
+            return View(newViewModel);
+        }
     }
 }
