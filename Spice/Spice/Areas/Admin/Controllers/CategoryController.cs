@@ -19,6 +19,8 @@ namespace Spice.Areas.Admin.Controllers
             _db = db;
         }
 
+
+
         // GET Categories for the view
         public async Task<IActionResult> Index()
         {
@@ -111,6 +113,7 @@ namespace Spice.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Get - Details
         public async Task<IActionResult> Details(int? id)
         {
             if(id == null)
