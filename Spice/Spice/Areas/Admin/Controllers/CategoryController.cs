@@ -122,6 +122,11 @@ namespace Spice.Areas.Admin.Controllers
             }
 
             var category = await _db.Category.FindAsync(id.Value);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
             return View(category);
         }
 
