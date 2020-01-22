@@ -44,7 +44,6 @@ namespace Spice.Areas.Admin.Controllers
                                         Select(p => p.Name).
                                         Distinct().ToListAsync()
             };
-
             return View(createViewModel);
         }
 
