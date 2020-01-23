@@ -52,7 +52,7 @@
                 <label asp-for="MenuItem.CategoryId" class="col-form-label"></label>
             </div>
             <div class="col-5">
-                <select id="ddlCategoryList"
+                <select id="CategoryId"
                         asp-for="MenuItem.CategoryId"
                         asp-items="Model.Category.ToSelectListItem(Model.MenuItem.CategoryId)"
                         class="form-control">
@@ -64,7 +64,7 @@
                 <label asp-for="MenuItem.SubCategoryId" class="col-form-label"></label>
             </div>
             <div class="col-5">
-                <select id="ddlSubCategoryList"
+                <select id="SubCategoryId"
                         asp-for="MenuItem.SubCategoryId"
                         asp-items="@( new SelectList(string.Empty, "Id", "Name"))"
                         class="form-control">
@@ -90,5 +90,30 @@
 
     </div>
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getSubCategory();
+            $('#CategoryId').change(function () {
+                getSubCategory();
+            });
+        });
+        function getSubCategory() {
+            var url = '@Url.Content("~/")' + "Admin/SubCategory/GetSubCategory";
+            var ddlSource = '#CategoryId';
+            $.getJSON(url, { id: $(ddlSource).val() }, function (data) {
+                var items = '';
+                $('#SubCategoryId').empty();
+                $.each(data, function (i, subcategory) {
+                    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";
+                });
+                $('#SubCategoryId').html(items);
+            })
+        }
+    </script>
+}
 
 
