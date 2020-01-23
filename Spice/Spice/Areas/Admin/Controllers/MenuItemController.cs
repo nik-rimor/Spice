@@ -19,7 +19,8 @@ namespace Spice.Areas.Admin.Controllers
         [BindProperty]
         public MenuItemViewModel MenuItemVM { get; set; }
 
-        public MenuItemController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public MenuItemController(ApplicationDbContext db,
+                                  IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;
