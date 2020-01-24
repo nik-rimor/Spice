@@ -65,6 +65,7 @@
             </div>
             <div class="col-5">
                 <select id="SubCategoryId"
+                        name="SubCategoryId"
                         asp-for="MenuItem.SubCategoryId"
                         asp-items="@( new SelectList(string.Empty, "Id", "Name"))"
                         class="form-control">
@@ -92,7 +93,14 @@
 </form>
 
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar: 'file edit format'
+        });
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -114,6 +122,8 @@
             })
         }
     </script>
+
+    <partial name="_ValidationScriptsPartial" />
 }
 
 
