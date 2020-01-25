@@ -69,9 +69,8 @@
                 </div>
                 <div class="col-8">
                     <select id="SubCategoryId"
-                            name="SubCategoryId"
                             asp-for="MenuItem.SubCategoryId"
-                            asp-items="@( new SelectList(string.Empty, "Id", "Name"))"
+                            asp-items="Model.SubCategory.ToSelectListItem(Model.MenuItem.SubCategoryId)"
                             class="form-control">
                     </select>
                 </div>
@@ -114,7 +113,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            getSubCategory();
+            //getSubCategory();
             $('#CategoryId').change(function () {
                 getSubCategory();
             });
@@ -126,14 +125,7 @@
                 var items = '';
                 $('#SubCategoryId').empty();
                 $.each(data, function (i, subcategory) {
-                    items += "<option value='" + subcategory.value;
-                    if (subcategory.value == @Model.MenuItem.SubCategoryId) {
-                        items += "' selected>";
-                    }
-                    else {
-                        items += "'>";
-                    }
-                    items += subcategory.text + "</option>";
+                    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";                    
                 });
                 $('#SubCategoryId').html(items);
             })
