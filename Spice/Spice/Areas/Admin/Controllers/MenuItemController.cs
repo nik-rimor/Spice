@@ -91,5 +91,25 @@ namespace Spice.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        // GET - Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var menuItem = await _db.MenuItem.Include(m=>m.Category).Include(m=>m.SubCategory).SingleOrDefaultAsync(s => s.Id == id.Value);
+            if(menuItem == null)
+            {
+                return NotFound();
+            }
+
+            MenuItemVM.MenuItem = menuItem;
+            MenuItemVM.SubCategory = await _db.SubCategory.Where(s => s.CategoryId == menuItem.CategoryId).ToListAsync();
+            return View(MenuItemVM);
+        }
     }
 }
