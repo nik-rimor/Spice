@@ -195,5 +195,45 @@ namespace Spice.Areas.Admin.Controllers
             MenuItemVM.MenuItem.Spicyness = spicyName;
             return View(MenuItemVM);
         }
+
+        // GET - Delete        
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var menuItemFromDb = await _db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(s => s.Id == id.Value);
+            if(menuItemFromDb == null)
+            {
+                return NotFound();
+            }
+            // Get Spicy string from MenuItem.ESpicy
+            MenuItemVM.MenuItem = menuItemFromDb;
+            var spicyName = Enum.GetName(typeof(MenuItem.ESpicy), Int32.Parse(MenuItemVM.MenuItem.Spicyness));
+            MenuItemVM.MenuItem.Spicyness = spicyName;
+            return View(MenuItemVM);
+        }
+
+        // POST - Delete
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var menuItemFromDb = await _db.MenuItem.FindAsync(id.Value);
+            if(menuItemFromDb == null)
+            {
+                return NotFound();
+            }
+
+            _db.MenuItem.Remove(menuItemFromDb);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
