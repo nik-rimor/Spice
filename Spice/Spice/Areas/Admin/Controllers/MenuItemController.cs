@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
+using Spice.Models;
 using Spice.Utility;
 using Spice.ViewModels;
 
@@ -171,6 +172,28 @@ namespace Spice.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
 
+        }
+
+        // GET - Details
+        public async Task<IActionResult> Details(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var menuItemFromDb = await _db.MenuItem.Include(m => m.Category).Include(m => m.SubCategory).SingleOrDefaultAsync(s => s.Id == id.Value);
+
+            if(menuItemFromDb == null)
+            {
+                return NotFound();
+            }
+
+            // Get Spicy string from MenuItem.ESpicy
+            MenuItemVM.MenuItem = menuItemFromDb;
+            var spicyName = Enum.GetName(typeof(MenuItem.ESpicy), Int32.Parse(MenuItemVM.MenuItem.Spicyness));
+            MenuItemVM.MenuItem.Spicyness = spicyName;
+            return View(MenuItemVM);
         }
     }
 }
