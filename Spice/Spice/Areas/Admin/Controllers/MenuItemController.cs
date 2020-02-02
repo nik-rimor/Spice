@@ -168,6 +168,8 @@ namespace Spice.Areas.Admin.Controllers
                 {
                     files[0].CopyTo(fileStream);
                 }
+                // Update the image property of the retrieved MenuItem from db 
+                menuItemFromDb.Image = @"\images\" + MenuItemVM.MenuItem.Id + newFileExtension;
             }
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
