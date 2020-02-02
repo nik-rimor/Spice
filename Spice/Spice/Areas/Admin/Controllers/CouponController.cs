@@ -27,7 +27,7 @@ namespace Spice.Areas.Admin.Controllers
         }
 
         // GET - Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
